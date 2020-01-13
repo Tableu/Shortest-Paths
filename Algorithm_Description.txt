@@ -1,0 +1,65 @@
+Vertex Object:
+    Stores the coordiantes, adjacency list and distance key (from heap) of
+    a single vertex in an object. Supports functions for adding adjacent
+    vertices and changing the distance key
+Reading the Input File:
+    Read in each line of the input file with readline(). For each line find
+    the coordinates by locating ':' (colon), since the start of the x coordinate
+    is always 2 spaces after it. Then locate ',' (comma), which indicates the end
+    of the x coordinate and the start of the y coordinate (2 spaces after ',').
+    Store the coordinates with Pythons array indices (a[st:end]). Store these in a
+    vertex object for this vertex.
+
+    After all the vertices have been read, call readline() once to skip the empty
+    line. Find the adjacent vertices of a vertex by locating ':' and ',' and store
+    each adjacent vertex in the adjacency list of the corresponding vertex (with a[st:end]).
+    Repeat this until the '\n' character is reached, do this for all vertices.
+Binary Heap:
+    Store keys in an array with children at 2i+1 and 2i+2 and parents at (i-1)/2
+    Keys are the given vertices distance from u, initialized as infinity and
+    altered by decrease_key in the algorithms. Any changes to the heap, through
+    heapify, decrease_key and delete_min are mirrored in an index array, which stores
+    the indexes that correspond to the dist values.
+
+    delete_min:
+        Replace the first element in the heap with the last one. Make sure the index
+        array mimics this. Delete the last element in the heap and call heapify on the
+        root of the heap (array[0])
+
+    decrease_key:
+        Find the index of the desired vertex, try-except is used in case the index
+        is not found. Update the dist key of the vertex and heapify from top to bottom
+        to preserve heap property.
+    heapify:
+        Compare a parent with its children. If the parent is larger than either child
+        swap the parent and the child and call heapify on the child.
+    print_heap:
+        Used to debug and keep track of the trace of the algorithms and heap functions.
+    max:
+        Used in the landmark algorithm. Finds the greatest distance from u to v.
+    reset:
+        Resets the heap, index array and vertex object array so the heap can be reused.
+Dijkstra:
+    Take the first element in the heap, delete it (with delete_min) and compare it's dist value
+    with its adjacent vertices dist values. If the current vertices dist value + edge_length (found through distance())
+    is less than the adjacent vertices dist value, call decrease_key on it, which updates its dist value and uses heapify
+    to preserve heap property. Do this until the heap is empty.
+A*:
+    Follows the same procedure as Dijkstra with modifications to the dist keys. When a dist key is updated
+    the distance between the adjacent vertex and v (the target vertex) is also added to it, as well as the
+    distance between the current and adjacent vertex. This makes sure that the algorithm picks the vertex
+    that brings it closest to v (the target). This algorithm exits when the target vertex is reached or when
+    the heap is empty.
+Landmark:
+    Follows the same procedure as A* and Dijkstra with modifications to the dist keys. Landmark calls max() to
+    add the lower bound estimate to the distance between the current and adjacent vertex. This is a better way
+    to determine which vertex is closer to v. LIke A*, Landmark exits when the target vertex is reached or when
+    the heap is empty.
+    3 Landmarks are chosen, each is given a dist array that stores the Dijkstra tree for the landmark. These
+    arrays are used for lower bound estimates. The 3 landmarks were chosen by calculating the distances from
+    vertices in the graph to points far away from the graph coordinates to find values on the edges of the graph.
+Main Code:
+    Calculate the 20 pairs of vertices by making a random array of 40 integers between 1 and 1000.
+    For each pair, make a heap and call Dijkstra, A* and Landmark on it. Print and store the results
+    (distances and # of vertices visited) in an array for analysis.
+    After all pairs of vertices have run, find the average # of visited vertices for each algorithm and print it.
